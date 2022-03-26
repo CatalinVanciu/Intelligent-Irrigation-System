@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Intelligent Irrigation System</string>
+    <string name="required_water_screen">Required water SCREEN</string>
+    <string name="activity_2">Activity 2</string>
+    <string name="manual">Manual</string>
+    <string name="required_water">Required Water</string>
+    <string name="_0">0%</string>
+</resources>
