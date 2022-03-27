@@ -2,19 +2,24 @@ package com.example.myapplication;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.content.Intent;
+import android.os.Handler;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    private final Handler HANDLER = new Handler();
+    private Runnable runnable;
+    private static final int DELAY = 10000; //10 seconds
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         TextView viewLightProgressBar = findViewById(R.id.viewLightProgressBar);
 
         addNotification();
-
+//        addDelayPopUp();
+//        pauseDelay();
     }
 
     private void openRequiredWaterForCrops() {
@@ -59,5 +65,20 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+    private void addDelayPopUp(){
+        HANDLER.postDelayed(runnable = () -> {
+            HANDLER.postDelayed(runnable, DELAY);
+            Toast.makeText(MainActivity.this, "This method is run every 10 seconds",
+                    Toast.LENGTH_SHORT).show();
+            // addNotification();
+        }, DELAY);
+        super.onResume();
+    }
+
+    private void pauseDelay() {
+        HANDLER.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
+    }
+
 
 }
