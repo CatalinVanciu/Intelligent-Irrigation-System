@@ -5,14 +5,12 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -34,11 +32,6 @@ public class GeneralView extends AppCompatActivity {
 
         Button manualWatering = findViewById(R.id.manualButton);
         manualWatering.setOnClickListener(view -> {
-            Dialog dialog = new Dialog(GeneralView.this);
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setCancelable(true);
-
-
         });
 
 //        TextView viewWaterProgressBar = findViewById(R.id.viewWaterProgressBar);
