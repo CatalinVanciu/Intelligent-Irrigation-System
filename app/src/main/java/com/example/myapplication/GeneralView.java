@@ -1,23 +1,23 @@
 package com.example.myapplication;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.content.Intent;
 import android.os.Handler;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
-
 public class GeneralView extends AppCompatActivity {
+
 
     private final Handler HANDLER = new Handler();
     private Runnable runnable;
@@ -91,6 +91,5 @@ public class GeneralView extends AppCompatActivity {
     private void pauseDelay() {
         HANDLER.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
     }
-
 
 }

@@ -10,16 +10,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".ChooseCrop"
+            android:name=".ManualWatering"
             android:exported="true" />
         <activity
-            android:name=".ManualWatering"
-            android:exported="false" />
-        <activity
             android:name=".RequiredWaterForCrops"
-            android:exported="false" />
+            android:exported="true" />
         <activity
-            android:name=".GeneralView"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +24,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".GeneralView"
+            android:exported="true" />
     </application>
 
 </manifest>

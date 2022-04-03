@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
 public class Crop {
-
     private String name;
     private double waterRequired;
 
