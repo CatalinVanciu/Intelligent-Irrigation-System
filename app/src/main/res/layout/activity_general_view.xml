@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".GeneralView">
 
     <!--    TO DO: TRY TO MAKE A GRADIENT PROGRESS BAR-->
@@ -41,7 +42,7 @@
         android:layout_width="88dp"
         android:layout_height="100dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="296dp"
+        android:layout_marginEnd="292dp"
         android:layout_marginBottom="470dp"
         app:layout_constraintBottom_toTopOf="@+id/manualButton"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,13 +85,13 @@
         android:layout_marginTop="42dp"
         android:layout_marginEnd="11dp"
         android:layout_marginBottom="543dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:text="@string/_0"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="@color/DodgerBlue"
         android:textColorHint="@color/DodgerBlue"
         app:layout_constraintBottom_toTopOf="@+id/requiredWaterButton"
         app:layout_constraintEnd_toEndOf="@+id/waterProgressBar"
-        app:layout_constraintHorizontal_bias="0.631"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/waterProgressBar"
         app:layout_constraintTop_toTopOf="parent" />
 
