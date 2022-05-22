@@ -7,6 +7,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
@@ -22,8 +25,10 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
 
     private Spinner chooseAreaSpinner;
+    private Spinner chooseCropSpinner;
     private DatabaseReference databaseReference;
     private ArrayList<Area> areas;
+    RetrieveDataFromFirebaseHelper retrieveDataFromFirebaseHelper = RetrieveDataFromFirebaseHelper.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +40,61 @@ public class MainActivity extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        areas = getAreas();
+        chooseAreaSpinner = findViewById(R.id.chooseAreaSpinner);
+        chooseCropSpinner = findViewById(R.id.chooseCropSpinner);
+
+        readData(areasReceived -> {
+//            for(Area a : areasReceived){
+//                Log.d("TEST", String.valueOf(a.getName()));
+//            }
+            ArrayList<String> areasNames = getAreasNames(areasReceived);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, areasNames);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            chooseAreaSpinner.setAdapter(adapter);
+            chooseAreaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    ArrayList<String> cropNames = getCropNames(areasReceived, (String) chooseAreaSpinner.getSelectedItem());
+                    ArrayAdapter<String> cropAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, cropNames);
+                    cropAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    chooseCropSpinner.setAdapter(cropAdapter);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+        });
 
     }
 
+    private ArrayList<String> getCropNames(ArrayList<Area> areasReceived, String areaSelected){
+        ArrayList<String> cropNames = new ArrayList<>();
+        
+        for(Area a : areasReceived){
+            if(a.getName().equalsIgnoreCase(areaSelected)){
+                for(Crop crop : a.getCrops()){
+                    cropNames.add(crop.getCropName());
+                }
+            }
+        }
+        
+        return cropNames;
+    }
+    
+    private ArrayList<String> getAreasNames(ArrayList<Area> areasReceived) {
+        ArrayList<String> areasSpinner = new ArrayList<>();
+        for(Area a : areasReceived){
+            areasSpinner.add(a.getName());
+        }
+
+        return areasSpinner;
+    }
+
     @NonNull
-    private ArrayList<Area> getAreas() {
+    private void readData(IHelper helper){
         ArrayList<Area> areas = new ArrayList<>();
         databaseReference.child("Areas").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -60,12 +114,10 @@ public class MainActivity extends AppCompatActivity {
 
                         Area area = new Area(elem.getKey(), cropsToBeAdded);
 
-                        Log.d("TEST", String.valueOf(area));
-
                         areas.add(area);
                     }
                 }
-
+                helper.areasReceived(areas);
             }
 
             @Override
@@ -74,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        return areas;
     }
 
 
@@ -102,4 +153,5 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
 }
