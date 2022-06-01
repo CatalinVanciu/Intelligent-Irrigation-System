@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="bin/main" path="src/main/java">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/main" path="src/main/resources">
+		<attributes>
+			<attribute name="gradle_scope" value="main"/>
+			<attribute name="gradle_used_by_scope" value="main,test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/test" path="src/test/java">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="bin/test" path="src/test/resources">
+		<attributes>
+			<attribute name="test" value="true"/>
+			<attribute name="gradle_scope" value="test"/>
+			<attribute name="gradle_used_by_scope" value="test"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="lib" path="libs/firebase/api-common-1.7.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/auto-value-1.4.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/error_prone_annotations-2.1.2.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/firebase-admin-6.5.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/gax-1.30.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/gax-grpc-1.30.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/gax-httpjson-0.47.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-api-client-1.25.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-api-client-gson-1.25.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-api-services-storage-v1-rev135-1.24.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-auth-library-credentials-0.11.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-auth-library-oauth2-http-0.11.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-cloud-core-1.43.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-cloud-core-grpc-1.43.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-cloud-core-http-1.43.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-cloud-firestore-0.61.0-beta.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-cloud-storage-1.43.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-http-client-1.25.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-http-client-appengine-1.24.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-http-client-gson-1.25.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-http-client-jackson-1.24.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-http-client-jackson2-1.25.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/google-oauth-client-1.25.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-auth-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-context-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-core-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-netty-shaded-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-protobuf-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-protobuf-lite-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/grpc-stub-1.13.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/guava-20.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/httpclient-4.5.5.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/httpcore-4.4.9.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/j2objc-annotations-1.1.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/jackson-core-2.9.6.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/jackson-core-asl-1.9.11.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/joda-time-2.9.2.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/json-20160810.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/jsr305-3.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-buffer-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-codec-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-codec-http-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-common-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-handler-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-resolver-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/netty-transport-4.1.22.Final.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/opencensus-api-0.15.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/opencensus-contrib-grpc-metrics-0.12.3.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/opencensus-contrib-grpc-util-0.15.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/opencensus-contrib-http-util-0.15.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/protobuf-java-3.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/protobuf-java-util-3.6.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/proto-google-cloud-firestore-v1beta1-0.26.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/proto-google-common-protos-1.12.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/proto-google-iam-v1-0.12.0.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="lib" path="libs/firebase/threetenbp-1.3.3.jar"/>
+	<classpathentry kind="lib" path="libs/jssc.jar"/>
+	<classpathentry kind="lib" path="libs/RXTXcomm.jar"/>
+	<classpathentry kind="output" path="bin/default"/>
+</classpath>
