@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity {
     private Spinner chooseAreaSpinner;
     private Spinner chooseCropSpinner;
     private DatabaseReference databaseReference;
-    private ArrayList<Area> areas;
-    RetrieveDataFromFirebaseHelper retrieveDataFromFirebaseHelper = RetrieveDataFromFirebaseHelper.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button okButton = findViewById(R.id.okButton);
-        okButton.setOnClickListener(view -> showDialog());
+        okButton.setOnClickListener(view -> openActivity());
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
@@ -67,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
             });
 
         });
+
+
 
     }
 
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     Map<String, Object> elements = (Map<String, Object>) snapshot.getValue();
                     assert elements != null;
+                    Log.d("TESTTT", String.valueOf(elements.toString()));
                     for(Map.Entry<String, Object> elem : elements.entrySet()){
                         Map<String, Double> crops = (Map<String, Double>) elem.getValue();
                         ArrayList<Crop> cropsToBeAdded = new ArrayList<>();
@@ -130,7 +131,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void openActivity() {
+
+        String area = chooseAreaSpinner.getSelectedItem().toString();
+        String crop = chooseCropSpinner.getSelectedItem().toString();
+
         Intent intent = new Intent(this, GeneralView.class);
+        intent.putExtra("area", area);
+        intent.putExtra("crop", crop);
         startActivity(intent);
     }
 
