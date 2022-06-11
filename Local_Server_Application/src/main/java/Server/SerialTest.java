@@ -1,14 +1,12 @@
 package Server;
 import java.io.BufferedReader;
+
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -107,10 +105,6 @@ public class SerialTest implements SerialPortEventListener{
 			try{
 				String inputLine=input.readLine();
 				
-//				for(String line : inputArray) {
-//					System.out.println(line.substring(line.length()-5).trim() + "---");
-//				}
-				
 				countSensors += 1;
 				
 				if(countSensors > 3) {
@@ -119,18 +113,22 @@ public class SerialTest implements SerialPortEventListener{
 				
 				String sensorType = "";
 				
+				Sensor sensor = new Sensor();
+				
 				if(countSensors == 1) {
-					// System.out.println("UVIndex: " + inputLine.substring(inputLine.length() - 5).trim());
-					sensorType = "UVIndexSensor";
+					//sensorType = "UVIndexSensor";
+					sensor.setType("UVIndexSensor");
 				} else if(countSensors == 2) {
-					// System.out.println("Temperatura: " + inputLine.substring(inputLine.length() - 5).trim());
-					sensorType = "TemperatureSensor";
+					//sensorType = "TemperatureSensor";
+					sensor.setType("TemperatureSensor");
 				} else if(countSensors == 3) {
-					//System.out.println("Umiditate sol: " + inputLine.substring(inputLine.length() - 5).trim());
-					sensorType = "HumiditySensor";
+					//sensorType = "HumiditySensor";
+					sensor.setType("HumiditySensor");
 				}
 				
-				addDataToFirebase(sensorType, Double.valueOf(inputLine.substring(inputLine.length() - 5).trim()));
+				sensor.setData(Double.valueOf(inputLine.substring(inputLine.length() - 5).trim()));
+				
+				addDataToFirebase(sensor);
 				
 				// System.out.println(inputLine);
 			}
@@ -155,24 +153,18 @@ public class SerialTest implements SerialPortEventListener{
 		
 	}
 	
-	private static void addDataToFirebase(String sensorType, double value) {
+	private static void addDataToFirebase(Sensor sensor) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		ScheduledExecutorService exec = Executors.newSingleThreadScheduledExecutor();
-		exec.scheduleAtFixedRate(new Runnable() {
-		  @Override
-		  public void run() {
-			  Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-			  
-			  String timeStampToBeAdded = sdf.format(timestamp);
-			  
-				try {
-					setValue(timeStampToBeAdded, sensorType, value);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-		  }
-		}, 0, 1, TimeUnit.MINUTES);
+		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+		  
+		String timeStampToBeAdded = sdf.format(timestamp);
+		  
+		try {
+			setValue(timeStampToBeAdded, sensor.getType(), sensor.getData());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
