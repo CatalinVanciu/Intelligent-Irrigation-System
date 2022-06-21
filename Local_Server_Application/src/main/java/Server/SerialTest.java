@@ -1,16 +1,19 @@
 package Server;
 import java.io.BufferedReader;
-
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
 import java.util.concurrent.CountDownLatch;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
@@ -44,6 +47,7 @@ public class SerialTest implements SerialPortEventListener{
 	private static final int TIME_OUT = 2000;
 	/** Default bits per second for COM port. */
 	private static final int DATA_RATE = 9600;
+	private DatabaseReference databaseReference;
 	
 	public void initialize(){
 		CommPortIdentifier portId = null;
@@ -139,10 +143,37 @@ public class SerialTest implements SerialPortEventListener{
 		}
 	}
 	
+	protected void getWaterPumpCommand() {
+		
+		FirebaseDatabase.getInstance().getReference().child("PumpCommand").child("Status").addValueEventListener(new ValueEventListener() {
+
+			@Override
+			public void onCancelled(DatabaseError error) {
+				
+			}
+
+			@Override
+			public void onDataChange(DataSnapshot snapshot) {
+				if(snapshot.exists()) {
+					System.out.println("WATER PUMP COMMAND: " + snapshot.getValue());
+					try {
+						OutputStream serialOut = serialPort.getOutputStream();
+						serialOut.write(snapshot.getValue().toString().getBytes());
+						serialOut.flush();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+		});
+		
+	}
+	
 	private static void setValue(String timeStamp, String sensorType, double value) throws InterruptedException {
         CountDownLatch done = new CountDownLatch(1);
         
-        FirebaseDatabase.getInstance().getReference().child(sensorType).child(timeStamp).setValue(value, new DatabaseReference.CompletionListener() {
+        FirebaseDatabase.getInstance().getReference().child("Sensors").child(sensorType).child(timeStamp).setValue(value, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError de, DatabaseReference dr) {
                 done.countDown();
