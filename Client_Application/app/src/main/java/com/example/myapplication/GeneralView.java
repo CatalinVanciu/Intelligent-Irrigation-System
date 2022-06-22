@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import static java.lang.Double.*;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -14,18 +16,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +64,7 @@ public class GeneralView extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        retrieveWaterRequiredFromFirebase(databaseReference, area, crop);
+        retrieveWaterRequiredFromFirebase(area, crop);
 
         //retrieveSensorDataFromFirebase(databaseReference);
 
@@ -113,12 +119,16 @@ public class GeneralView extends AppCompatActivity {
         HANDLER.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
     }
 
-    private void retrieveWaterRequiredFromFirebase(DatabaseReference databaseReference, String area, String crop){
+    private void retrieveWaterRequiredFromFirebase(String area, String crop){
         databaseReference.child("Areas").child(area).child(crop).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    Log.d("snapshot", String.valueOf(snapshot.getValue()));
+                    Log.d("snapshot", String.valueOf(snapshot.getValue() + " - " + snapshot.getValue().getClass()));
+
+                    double waterRequired = (Long) snapshot.getValue();
+
+                    retrieveSensorDataFromFirebase(waterRequired, crop);
                 }
             }
 
@@ -129,12 +139,68 @@ public class GeneralView extends AppCompatActivity {
         });
     }
 
-    private void retrieveSensorDataFromFirebase(DatabaseReference databaseReference){
+    private void retrieveSensorDataFromFirebase(double waterRequired, String crop){
         Runnable thread = () -> {
+            Query query = databaseReference.child("Sensors").limitToLast(3).orderByValue();
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    ArrayList<Sensor> sensors = getArrayOfSensors(snapshot);
 
+                    Log.d("SENORS", sensors.toString());
+
+                    for(Sensor sensor : sensors){
+                        sensor.compareWithProperValue(waterRequired, crop);
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         };
 
         scheduler.scheduleWithFixedDelay(thread, 10, 10, TimeUnit.SECONDS);
     }
+
+    private ArrayList<Sensor> getArrayOfSensors(@NonNull DataSnapshot snapshot) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        ArrayList<Date> dates = new ArrayList<>();
+        ArrayList<Sensor> result = new ArrayList<>();
+        for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+            Map<String, Double> mp = (Map<String, Double>) dataSnapshot.getValue();
+            for(Map.Entry<String, Double> elem : mp.entrySet()){
+                try{
+                       Date date = sdf.parse(elem.getKey());
+                       dates.add(date);
+                } catch(ParseException e){
+                    e.printStackTrace();
+                }
+            }
+            Collections.sort(dates);
+
+            String finalDate = sdf.format(dates.get(dates.size() - 1));
+            double sensorData = 0;
+
+            for(Map.Entry<String, Double> elem : mp.entrySet()){
+                if(finalDate.equalsIgnoreCase(elem.getKey())){
+                    //Log.d("SENSOR", String.valueOf(elem.getValue()));
+                    sensorData = parseDouble(String.valueOf(elem.getValue()));
+                    break;
+                }
+            }
+
+           // Log.d("SENSORS", String.valueOf(dataSnapshot.getKey() + " - " + finalDate + " - " + sensorData));
+            Sensor sensor = new Sensor(dataSnapshot.getKey(), finalDate, sensorData);
+            result.add(sensor);
+        }
+
+        return result;
+
+    }
+
 
 }

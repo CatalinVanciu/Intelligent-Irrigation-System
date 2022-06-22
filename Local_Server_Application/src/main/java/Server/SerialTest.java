@@ -130,7 +130,7 @@ public class SerialTest implements SerialPortEventListener{
 					sensor.setType("HumiditySensor");
 				}
 				
-				sensor.setData(Double.valueOf(inputLine.substring(inputLine.length() - 5).trim()));
+				sensor.setData(Double.valueOf(inputLine.trim()));
 				
 				addDataToFirebase(sensor);
 				

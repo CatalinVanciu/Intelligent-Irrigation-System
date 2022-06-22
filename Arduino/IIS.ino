@@ -197,14 +197,11 @@ void loop()
     StartTime      = millis();
     DHTHumidity    = dht.readHumidity();
     DHTTemperature = dht.readTemperature();
-    MoisHumidity   = analogRead(MoisturePin)/7;
+    MoisHumidity   = analogRead(MoisturePin);
     UVIndex        = (float)SI1145.ReadUV()/100 + 0.5;
 
-    Serial.print("UV Index: ");
     Serial.println(UVIndex);
-    Serial.print("Temperatura: ");
     Serial.println(DHTTemperature);
-    Serial.print("Umiditate sol: ");
     Serial.println(MoisHumidity);
 
     delay(10000);
