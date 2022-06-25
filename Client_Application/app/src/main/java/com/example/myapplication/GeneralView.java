@@ -16,13 +16,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
@@ -32,9 +32,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class GeneralView extends AppCompatActivity {
 
@@ -42,8 +39,15 @@ public class GeneralView extends AppCompatActivity {
     private final Handler HANDLER = new Handler();
     private Runnable runnable;
     private static final int DELAY = 10000; //10 seconds
-    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private DatabaseReference databaseReference;
+    private TextView areaNameText;
+    private TextView cropNameText;
+    private TextView viewWaterProgressBar;
+    private TextView viewHumidityProgressBar;
+    private TextView viewLightProgressBar;
+
+    private final String url = "https://api.openweathermap.org/data/2.5/weather";
+    private final String appid = "e53301e27efa0b66d05045d91b2742d3";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,19 +62,27 @@ public class GeneralView extends AppCompatActivity {
         manualWatering.setOnClickListener(view -> {
         });
 
+
         Intent intent = getIntent();
         String area = intent.getStringExtra("area");
         String crop = intent.getStringExtra("crop");
 
+        areaNameText = findViewById(R.id.areaNameTextView);
+        areaNameText.setText(area);
+
+        cropNameText = findViewById(R.id.cropNameTextView);
+        cropNameText.setText(crop);
+
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        retrieveWaterRequiredFromFirebase(area, crop);
+        viewWaterProgressBar = findViewById(R.id.viewWaterProgressBar);
+        viewHumidityProgressBar = findViewById(R.id.viewHumidityProgressBar);
+        viewLightProgressBar = findViewById(R.id.viewLightProgressBar);
+
+        retrieveWaterRequiredFromFirebase(areaNameText.getText().toString(), cropNameText.getText().toString());
 
         //retrieveSensorDataFromFirebase(databaseReference);
 
-//        TextView viewWaterProgressBar = findViewById(R.id.viewWaterProgressBar);
-//        TextView viewHumidityProgressBar = findViewById(R.id.viewHumidityProgressBar);
-//        TextView viewLightProgressBar = findViewById(R.id.viewLightProgressBar);
 
         addNotification();
 //        addDelayPopUp();
@@ -140,30 +152,29 @@ public class GeneralView extends AppCompatActivity {
     }
 
     private void retrieveSensorDataFromFirebase(double waterRequired, String crop){
-        Runnable thread = () -> {
-            Query query = databaseReference.child("Sensors").limitToLast(3).orderByValue();
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ArrayList<Sensor> sensors = getArrayOfSensors(snapshot);
 
-                    Log.d("SENORS", sensors.toString());
+        databaseReference.child("Sensors").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Sensor> sensors = getArrayOfSensors(snapshot);
 
-                    for(Sensor sensor : sensors){
-                        sensor.compareWithProperValue(waterRequired, crop);
-                    }
+                Log.d("SENORS", sensors.toString());
 
-
+                for(Sensor sensor : sensors){
+                    sensor.compareWithProperValue(waterRequired, crop);
+                    Log.d("humidity test", String.valueOf(sensor.getHumidityPercent(waterRequired)));
+                    viewWaterProgressBar.setText(String.valueOf(sensor.getHumidityPercent(waterRequired) + "%"));
+                    break;
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                }
-            });
-        };
+            }
+        });
 
-        scheduler.scheduleWithFixedDelay(thread, 10, 10, TimeUnit.SECONDS);
+
     }
 
     private ArrayList<Sensor> getArrayOfSensors(@NonNull DataSnapshot snapshot) {

@@ -50,6 +50,24 @@ public class Sensor {
         }
     }
 
+    public int getHumidityPercent(double waterRequired){
+        int result = 0;
+
+        if(type.equalsIgnoreCase("HumiditySensor")){
+            if(data >= waterRequired){
+                result = 100;
+            } else {
+                result = (int) ((int) data/waterRequired * 100);
+            }
+        }
+
+        if(result > 100){
+            return 100;
+        }
+
+        return result;
+    }
+
 
     public String getDate(){
         return date;

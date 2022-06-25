@@ -4,11 +4,13 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/drawable-v24/ic_sharp_notification_important_24.xml" value="0.124" />
+        <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/drawable/ic_wave.xml" value="0.124" />
         <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/layout/activity_general_view.xml" value="0.11302083333333333" />
         <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/layout/activity_main.xml" value="0.18206521739130435" />
         <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/layout/activity_manual_watering.xml" value="0.11302083333333333" />
         <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/layout/activity_required_water_for_crops.xml" value="0.11302083333333333" />
         <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/layout/item.xml" value="0.11302083333333333" />
+        <entry key="..\:/Facultate/LICENTA/Application/app/src/main/res/layout/spinner_list.xml" value="0.11302083333333333" />
       </map>
     </option>
   </component>

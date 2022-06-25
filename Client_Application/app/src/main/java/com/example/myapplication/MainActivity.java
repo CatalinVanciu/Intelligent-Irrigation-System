@@ -34,27 +34,29 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button okButton = findViewById(R.id.okButton);
-        okButton.setOnClickListener(view -> openActivity());
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         chooseAreaSpinner = findViewById(R.id.chooseAreaSpinner);
         chooseCropSpinner = findViewById(R.id.chooseCropSpinner);
 
+
+        okButton.setOnClickListener(view -> openActivity());
+
         readData(areasReceived -> {
 //            for(Area a : areasReceived){
 //                Log.d("TEST", String.valueOf(a.getName()));
 //            }
             ArrayList<String> areasNames = getAreasNames(areasReceived);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, areasNames);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_list, areasNames);
+            adapter.setDropDownViewResource(R.layout.spinner_list);
             chooseAreaSpinner.setAdapter(adapter);
             chooseAreaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     ArrayList<String> cropNames = getCropNames(areasReceived, (String) chooseAreaSpinner.getSelectedItem());
-                    ArrayAdapter<String> cropAdapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, cropNames);
-                    cropAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<String> cropAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.spinner_list, cropNames);
+                    cropAdapter.setDropDownViewResource(R.layout.spinner_list);
                     chooseCropSpinner.setAdapter(cropAdapter);
                 }
 
@@ -132,12 +134,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void openActivity() {
 
+
         String area = chooseAreaSpinner.getSelectedItem().toString();
         String crop = chooseCropSpinner.getSelectedItem().toString();
 
         Intent intent = new Intent(this, GeneralView.class);
         intent.putExtra("area", area);
         intent.putExtra("crop", crop);
+
         startActivity(intent);
     }
 
@@ -150,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
         //Setting message manually and performing action on button click
         builder.setMessage("Are you sure?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", (dialog, id) -> openActivity())
+                //.setPositiveButton("Yes", (dialog, id) -> openActivity())
                 .setNegativeButton("No", (dialog, id) -> {
                     //  Action for 'No' Button
                     // Toast.makeText(getApplicationContext(),"No",Toast.LENGTH_SHORT).show();
