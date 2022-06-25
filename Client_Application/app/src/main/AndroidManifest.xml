@@ -9,7 +9,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
-            android:name=".ManualWatering"
+            android:name=".ManualPopUp"
+            android:theme="@style/AppTheme.ManualPopUp"
             android:exported="true" />
         <activity
             android:name=".RequiredWaterForCrops"

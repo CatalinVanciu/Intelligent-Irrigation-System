@@ -64,6 +64,7 @@ public class GeneralView extends AppCompatActivity {
 
         Button manualWatering = findViewById(R.id.manualButton);
         manualWatering.setOnClickListener(view -> {
+            openPopUpView();
         });
 
 
@@ -93,6 +94,11 @@ public class GeneralView extends AppCompatActivity {
         addNotification();
 //        addDelayPopUp();
 //        pauseDelay();
+    }
+
+    private void openPopUpView() {
+        Intent intent = new Intent(this, ManualPopUp.class);
+        startActivity(intent);
     }
 
 
@@ -142,7 +148,6 @@ public class GeneralView extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
-                    Log.d("snapshot", String.valueOf(snapshot.getValue() + " - " + snapshot.getValue().getClass()));
 
                     double waterRequired = (Long) snapshot.getValue();
 
