@@ -48,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
 //                Log.d("TEST", String.valueOf(a.getName()));
 //            }
             ArrayList<String> areasNames = getAreasNames(areasReceived);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.spinner_list, areasNames);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_list, areasNames);
             adapter.setDropDownViewResource(R.layout.spinner_list);
             chooseAreaSpinner.setAdapter(adapter);
             chooseAreaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     ArrayList<String> cropNames = getCropNames(areasReceived, (String) chooseAreaSpinner.getSelectedItem());
-                    ArrayAdapter<String> cropAdapter = new ArrayAdapter<String>(MainActivity.this, R.layout.spinner_list, cropNames);
+                    ArrayAdapter<String> cropAdapter = new ArrayAdapter<>(MainActivity.this, R.layout.spinner_list, cropNames);
                     cropAdapter.setDropDownViewResource(R.layout.spinner_list);
                     chooseCropSpinner.setAdapter(cropAdapter);
                 }

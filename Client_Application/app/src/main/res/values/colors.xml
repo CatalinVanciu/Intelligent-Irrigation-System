@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="DodgerBlue">#15AAFF</color>
+    <color name="DarkBlue">#00008B</color>
+    <color name="NeonYellow">#FFFF33</color>
+    <color name="GoldenYellow">#FFDF00</color>
     <color name="Chartreuse">#DFFF00</color>
     <color name="CadmiumRed">#D22B2B</color>
 </resources>

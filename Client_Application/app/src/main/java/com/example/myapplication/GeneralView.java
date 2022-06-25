@@ -3,6 +3,7 @@ package com.example.myapplication;
 import static java.lang.Double.*;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -16,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,8 +45,10 @@ public class GeneralView extends AppCompatActivity {
     private TextView areaNameText;
     private TextView cropNameText;
     private TextView viewWaterProgressBar;
-    private TextView viewHumidityProgressBar;
-    private TextView viewLightProgressBar;
+    private TextView viewUVProgressBar;
+
+    private ProgressBar waterProgressBar;
+    private ProgressBar uvProgressBar;
 
     private final String url = "https://api.openweathermap.org/data/2.5/weather";
     private final String appid = "e53301e27efa0b66d05045d91b2742d3";
@@ -75,9 +79,11 @@ public class GeneralView extends AppCompatActivity {
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        viewWaterProgressBar = findViewById(R.id.viewWaterProgressBar);
-        viewHumidityProgressBar = findViewById(R.id.viewHumidityProgressBar);
-        viewLightProgressBar = findViewById(R.id.viewLightProgressBar);
+        viewWaterProgressBar = findViewById(R.id.viewHumidityProgressBar);
+        viewUVProgressBar = findViewById(R.id.viewUVProgressBar);
+
+        waterProgressBar = findViewById(R.id.waterProgressBar);
+        uvProgressBar = findViewById(R.id.UVProgressBar);
 
         retrieveWaterRequiredFromFirebase(areaNameText.getText().toString(), cropNameText.getText().toString());
 
@@ -154,18 +160,31 @@ public class GeneralView extends AppCompatActivity {
     private void retrieveSensorDataFromFirebase(double waterRequired, String crop){
 
         databaseReference.child("Sensors").addValueEventListener(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Sensor> sensors = getArrayOfSensors(snapshot);
 
-                Log.d("SENORS", sensors.toString());
+                //Log.d("SENORS", sensors.toString());
+
+                int humidityProgress = 0;
+                int uvProgress = 0;
 
                 for(Sensor sensor : sensors){
-                    sensor.compareWithProperValue(waterRequired, crop);
-                    Log.d("humidity test", String.valueOf(sensor.getHumidityPercent(waterRequired)));
-                    viewWaterProgressBar.setText(String.valueOf(sensor.getHumidityPercent(waterRequired) + "%"));
-                    break;
+
+                    if(sensor.getType().equalsIgnoreCase("HumiditySensor")) {
+                        sensor.compareWithProperValue(waterRequired, crop);
+                        humidityProgress = sensor.getHumidityPercent(waterRequired);
+                    }
+                    if(sensor.getType().equalsIgnoreCase("UVIndexSensor") && sensor.getData() != 0.0){
+                        uvProgress = sensor.getUVPercent();
+                    }
+                    //break;
                 }
+
+                //Log.d("uv progress: ", String.valueOf(uvProgress));
+                updateProgressBar(humidityProgress, uvProgress);
+
             }
 
             @Override
@@ -175,6 +194,15 @@ public class GeneralView extends AppCompatActivity {
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateProgressBar(int humidityProgress, int uvProgress){
+        waterProgressBar.setProgress(humidityProgress, true);
+        viewWaterProgressBar.setText(String.valueOf(humidityProgress) + "%");
+
+        uvProgressBar.setProgress(uvProgress, true);
+        viewUVProgressBar.setText(String.valueOf(uvProgress) + "%");
     }
 
     private ArrayList<Sensor> getArrayOfSensors(@NonNull DataSnapshot snapshot) {
