@@ -41,8 +41,8 @@
         style="@style/WaterCircularDeterminateProgressBar"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="208dp"
-        android:layout_marginEnd="228dp"
+        android:layout_marginTop="276dp"
+        android:layout_marginEnd="224dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:progress="0" />
@@ -52,8 +52,8 @@
         style="@style/UVCircularDeterminateProgressBar"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_marginTop="208dp"
-        android:layout_marginEnd="28dp"
+        android:layout_marginTop="276dp"
+        android:layout_marginEnd="44dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:progress="0" />
@@ -90,26 +90,54 @@
         android:id="@+id/areaNameTextView"
         android:layout_width="131dp"
         android:layout_height="23dp"
+        android:layout_marginBottom="720dp"
         android:text=""
         android:textSize="20dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
+        app:layout_constraintHorizontal_bias="0.232"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="118dp" />
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/cropNameTextView"
         android:layout_width="131dp"
         android:layout_height="23dp"
+        android:layout_marginBottom="720dp"
         android:text=""
         android:textSize="20dp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.832"
+        app:layout_constraintHorizontal_bias="0.842"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="118dp" />
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/humidityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="632dp"
+        android:text="Humidity:"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.229"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/uvText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="632dp"
+        android:text="UV:"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.724"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

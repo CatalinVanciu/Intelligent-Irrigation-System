@@ -26,4 +26,9 @@
         <item name="android:progressDrawable">@drawable/circle_uv</item>
     </style>
 
+    <style name="TimePickerStyle">
+        <item name="android:text">20dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

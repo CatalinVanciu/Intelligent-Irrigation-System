@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         
         return cropNames;
     }
-    
+
     private ArrayList<String> getAreasNames(ArrayList<Area> areasReceived) {
         ArrayList<String> areasSpinner = new ArrayList<>();
         for(Area a : areasReceived){
@@ -131,9 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void openActivity() {
-
 
         String area = chooseAreaSpinner.getSelectedItem().toString();
         String crop = chooseCropSpinner.getSelectedItem().toString();
