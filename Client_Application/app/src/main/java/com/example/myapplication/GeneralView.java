@@ -91,6 +91,7 @@ public class GeneralView extends AppCompatActivity {
         //retrieveSensorDataFromFirebase(databaseReference);
 
 
+
         addNotification();
 //        addDelayPopUp();
 //        pauseDelay();
