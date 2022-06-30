@@ -13,7 +13,7 @@
         android:id="@+id/areaImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
+        android:layout_marginTop="128dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -43,20 +43,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/requiredWaterButton"
-        android:layout_width="219dp"
-        android:layout_height="54dp"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:layout_marginBottom="35dp"
-        android:text="@string/required_water"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-
-        />
 
     <ProgressBar
         android:id="@+id/waterProgressBar"
@@ -127,7 +113,7 @@
         android:id="@+id/cropNameTextView"
         android:layout_width="131dp"
         android:layout_height="23dp"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="146dp"
         android:text=""
         android:textSize="20dp"
         android:textStyle="bold"

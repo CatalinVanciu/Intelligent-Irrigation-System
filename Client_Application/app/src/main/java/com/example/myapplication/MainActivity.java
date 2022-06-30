@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
         okButton.setOnClickListener(view -> openActivity());
 
         readData(areasReceived -> {
-//            for(Area a : areasReceived){
-//                Log.d("TEST", String.valueOf(a.getName()));
-//            }
             ArrayList<String> areasNames = getAreasNames(areasReceived);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.spinner_list, areasNames);
             adapter.setDropDownViewResource(R.layout.spinner_list);
@@ -110,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                         Map<String, Double> crops = (Map<String, Double>) elem.getValue();
                         ArrayList<Crop> cropsToBeAdded = new ArrayList<>();
                         for(Map.Entry<String, Double> cropElem : crops.entrySet()){
-                            // Log.d("TEST IN FOR: ", String.valueOf(cropElem.getKey() + " " + cropElem.getValue()));
+                            Log.d("cropTest", String.valueOf(cropElem.toString()));
                             Crop crop = new Crop(cropElem.getKey(), String.valueOf(cropElem.getValue()));
                             cropsToBeAdded.add(crop);
                         }

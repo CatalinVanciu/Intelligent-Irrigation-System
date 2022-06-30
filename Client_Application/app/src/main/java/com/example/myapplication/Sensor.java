@@ -6,6 +6,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Sensor {
+
+    private static final int MAX_PROPER_VALUE_FOR_SUNFLOWER = 300;
+    private static final int MAX_PROPER_VALUE_FOR_OTHERS = 800;
+
     private String type;
     private String date;
     private double data;
@@ -28,14 +32,14 @@ public class Sensor {
         if(crop.equalsIgnoreCase("Sunflower")){
             if(data < waterRequired){
                 state = 1;
-            } else if(data >= waterRequired || data >= 300){
+            } else if(data >= waterRequired || data >= MAX_PROPER_VALUE_FOR_SUNFLOWER){
                 state = 0;
             }
         } else{
             if(data < waterRequired){
                 //modify waterpump state to 1
                 state = 1;
-            } else if(data >= waterRequired || data >= 800){
+            } else if(data >= waterRequired || data >= MAX_PROPER_VALUE_FOR_OTHERS){
                 //modify waterpump state to 0
                 state = 0;
             }

@@ -8,24 +8,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -37,10 +44,9 @@ import java.util.Map;
 
 public class GeneralView extends AppCompatActivity {
 
+    private final String url = "https://api.openweathermap.org/data/2.5/weather";
+    private final String appid = "e53301e27efa0b66d05045d91b2742d3";
 
-    private final Handler HANDLER = new Handler();
-    private Runnable runnable;
-    private static final int DELAY = 10000; //10 seconds
     private DatabaseReference databaseReference;
     private TextView areaNameText;
     private TextView cropNameText;
@@ -50,8 +56,7 @@ public class GeneralView extends AppCompatActivity {
     private ProgressBar waterProgressBar;
     private ProgressBar uvProgressBar;
 
-    private final String url = "https://api.openweathermap.org/data/2.5/weather";
-    private final String appid = "e53301e27efa0b66d05045d91b2742d3";
+    private boolean isRainingAPI = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +64,8 @@ public class GeneralView extends AppCompatActivity {
         setContentView(R.layout.activity_general_view);
         createNotificationChannel();
 
-        Button requiredWaterButton = findViewById(R.id.requiredWaterButton);
-        requiredWaterButton.setOnClickListener(view -> openActivity(RequiredWaterForCrops.class));
-
         Button manualWatering = findViewById(R.id.manualButton);
-        manualWatering.setOnClickListener(view -> {
-            openPopUpView();
-        });
+        manualWatering.setOnClickListener(view -> openPopUpView());
 
 
         Intent intent = getIntent();
@@ -88,13 +88,6 @@ public class GeneralView extends AppCompatActivity {
 
         retrieveWaterRequiredFromFirebase(areaNameText.getText().toString(), cropNameText.getText().toString());
 
-        //retrieveSensorDataFromFirebase(databaseReference);
-
-
-
-        addNotification();
-//        addDelayPopUp();
-//        pauseDelay();
     }
 
     private void openPopUpView() {
@@ -102,19 +95,48 @@ public class GeneralView extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    private void openActivity(final Class<? extends Activity> activityToOpen) {
-        Intent intent = new Intent(this, activityToOpen);
-        startActivity(intent);
-    }
-
     private void addNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel1")
-                .setSmallIcon(R.drawable.ic_sharp_notification_important_24).setContentTitle("Content Title")
-                .setContentText("Content Text");
+                .setSmallIcon(R.drawable.ic_sharp_notification_important_24).setContentTitle("Warning")
+                .setContentText("It's going to rain. The water pump will be stopped.");
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(100, builder.build());
+    }
+
+    private void getDataUsingAPI(String city){
+        String tempUrl = url + "?q=" + city + "&appid=" + appid;
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, tempUrl, response -> {
+
+            JSONObject jsonResponse;
+            JSONArray jsonArray;
+            JSONObject jsonObjectWeather;
+            try {
+                jsonResponse = new JSONObject(response);
+                jsonArray = jsonResponse.getJSONArray("weather");
+                jsonObjectWeather = jsonArray.getJSONObject(0);
+
+                String description = jsonObjectWeather.getString("description");
+                if(description.contains("rain")){
+                    isRainingAPI = true;
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+
+            Log.d("response", response);
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        requestQueue.add(stringRequest);
+
     }
 
     private void createNotificationChannel() {
@@ -130,19 +152,6 @@ public class GeneralView extends AppCompatActivity {
         }
     }
 
-    private void addDelayPopUp(){
-        HANDLER.postDelayed(runnable = () -> {
-            HANDLER.postDelayed(runnable, DELAY);
-            Toast.makeText(GeneralView.this, "This method is run every 10 seconds",
-                    Toast.LENGTH_SHORT).show();
-            // addNotification();
-        }, DELAY);
-        super.onResume();
-    }
-
-    private void pauseDelay() {
-        HANDLER.removeCallbacks(runnable); //stop handler when activity not visible super.onPause();
-    }
 
     private void retrieveWaterRequiredFromFirebase(String area, String crop){
         databaseReference.child("Areas").child(area).child(crop).addValueEventListener(new ValueEventListener() {
@@ -171,21 +180,24 @@ public class GeneralView extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Sensor> sensors = getArrayOfSensors(snapshot);
 
-                //Log.d("SENORS", sensors.toString());
-
                 int humidityProgress = 0;
                 int uvProgress = 0;
 
-                for(Sensor sensor : sensors){
+                getDataUsingAPI(areaNameText.getText().toString());
+                if(!isRainingAPI){
+                    for(Sensor sensor : sensors){
 
-                    if(sensor.getType().equalsIgnoreCase("HumiditySensor")) {
-                        sensor.compareWithProperValue(waterRequired, crop);
-                        humidityProgress = sensor.getHumidityPercent(waterRequired);
+                        if(sensor.getType().equalsIgnoreCase("HumiditySensor")) {
+                            sensor.compareWithProperValue(waterRequired, crop);
+                            humidityProgress = sensor.getHumidityPercent(waterRequired);
+                        }
+                        if(sensor.getType().equalsIgnoreCase("UVIndexSensor") && sensor.getData() != 0.0){
+                            uvProgress = sensor.getUVPercent();
+                        }
+                        //break;
                     }
-                    if(sensor.getType().equalsIgnoreCase("UVIndexSensor") && sensor.getData() != 0.0){
-                        uvProgress = sensor.getUVPercent();
-                    }
-                    //break;
+                } else {
+                    addNotification();
                 }
 
                 //Log.d("uv progress: ", String.valueOf(uvProgress));
@@ -198,8 +210,6 @@ public class GeneralView extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -232,20 +242,15 @@ public class GeneralView extends AppCompatActivity {
 
             for(Map.Entry<String, Double> elem : mp.entrySet()){
                 if(finalDate.equalsIgnoreCase(elem.getKey())){
-                    //Log.d("SENSOR", String.valueOf(elem.getValue()));
                     sensorData = parseDouble(String.valueOf(elem.getValue()));
                     break;
                 }
             }
-
-           // Log.d("SENSORS", String.valueOf(dataSnapshot.getKey() + " - " + finalDate + " - " + sensorData));
             Sensor sensor = new Sensor(dataSnapshot.getKey(), finalDate, sensorData);
             result.add(sensor);
         }
 
         return result;
-
     }
-
 
 }

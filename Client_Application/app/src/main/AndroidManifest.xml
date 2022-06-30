@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.myapplication">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -10,11 +13,8 @@
         android:theme="@style/Theme.AppCompat.NoActionBar">
         <activity
             android:name=".ManualPopUp"
-            android:theme="@style/AppTheme.ManualPopUp"
-            android:exported="true" />
-        <activity
-            android:name=".RequiredWaterForCrops"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/AppTheme.ManualPopUp" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

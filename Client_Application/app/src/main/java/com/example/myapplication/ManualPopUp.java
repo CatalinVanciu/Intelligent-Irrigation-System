@@ -80,12 +80,10 @@ public class ManualPopUp extends AppCompatActivity {
             String sysCurrentHour = currentDate.split(" ")[1].split(":")[0];
             String sysCurrentMinute = currentDate.split(" ")[1].split(":")[1];
 
-            Log.d("systest", String.valueOf(sysCurrentHour + " " + sysCurrentMinute));
-            Log.d("pickertest", String.valueOf(hourFromTimePicker + " " + minuteFromTimePicker));
-
             if(Integer.parseInt(sysCurrentHour) >= hourFromTimePicker && Integer.parseInt(sysCurrentMinute) >= minuteFromTimePicker){
                 isTimePickerActivated = false;
             }
+            showToast("Pump is off until " + hourFromTimePicker + ":" + minuteFromTimePicker);
         }
 
         if(!isTimePickerActivated){
